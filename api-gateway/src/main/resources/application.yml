@@ -1,0 +1,41 @@
+# Spring properties
+spring:
+  application:
+    name: api-gateway  # Identify this application
+
+# Server
+server:
+  port: @http.port@   # HTTP (Tomcat) port
+
+# Discovery Server Access
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:1111/eureka/
+  instance:
+    leaseRenewalIntervalInSeconds: 5   # DO NOT DO THIS IN PRODUCTION
+
+# Api-Gate-Way
+zuul:
+  prefix: /api
+  routes:
+    auth-service:
+      path: /auth-service/**
+      serviceId: AUTH-SERVICE
+      sensitiveHeaders: Cookie,Set-Cookie
+      
+    product-service:
+      path: /product-service/**
+      serviceId: PRODUCT-SERVICE
+      sensitiveHeaders: Cookie,Set-Cookie
+      
+      
+# Increase the Hystrix timeout to 60s (globally)
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
+      
